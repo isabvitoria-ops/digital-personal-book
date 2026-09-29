@@ -1,10 +1,11 @@
 import Dexie, { type EntityTable } from "dexie";
-import type { Anexo, Area, Caderno, Config, Pagina } from "./tipos";
+import type { Anexo, Apagado, Area, Caderno, Config, Pagina, Sincronia } from "./tipos";
 import { NOMES_MARCADORES_PADRAO } from "./tipos";
 
 /**
  * O banco mora NO APARELHO (IndexedDB do navegador). Nada sai daqui sem ela
- * mandar: não há servidor, conta nem nuvem nesta fase.
+ * mandar. A única saída é a sincronização, e só para o repositório PRIVADO
+ * que ela mesma configurar.
  */
 export class BancoDoCaderno extends Dexie {
   areas!: EntityTable<Area, "id">;
@@ -12,6 +13,8 @@ export class BancoDoCaderno extends Dexie {
   paginas!: EntityTable<Pagina, "id">;
   anexos!: EntityTable<Anexo, "id">;
   config!: EntityTable<Config, "chave">;
+  apagados!: EntityTable<Apagado, "id">;
+  sincronia!: EntityTable<Sincronia, "chave">;
 
   constructor(nome = "caderno-pessoal") {
     super(nome);
@@ -21,6 +24,12 @@ export class BancoDoCaderno extends Dexie {
       paginas: "id, cadernoId, atualizadaEm, abertaEm",
       anexos: "id, paginaId",
       config: "chave",
+    });
+    // v2: sincronização entre aparelhos. "apagados" lembra o que foi apagado
+    // para sempre, para o outro aparelho apagar também.
+    this.version(2).stores({
+      apagados: "id",
+      sincronia: "chave",
     });
   }
 }

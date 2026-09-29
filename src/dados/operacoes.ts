@@ -1,6 +1,11 @@
 import { db } from "./banco";
 import { agora, novoId } from "./ids";
-import type { Anexo, Area, Caderno, Ficha, Id, Pagina, TipoCaderno } from "./tipos";
+import type { Anexo, Apagado, Area, Caderno, Ficha, Id, Pagina, TipoCaderno } from "./tipos";
+
+/** Anota o que foi apagado para sempre, para a sincronização levar adiante. */
+async function lembrarApagado(id: Id, tipo: Apagado["tipo"]) {
+  await db.apagados.put({ id, tipo, em: agora() });
+}
 import { anexosCitados } from "../util/links";
 
 // ---------------------------------------------------------------------------
@@ -23,6 +28,7 @@ export async function atualizarArea(id: Id, mudancas: Partial<Pick<Area, "nome" 
 export async function apagarArea(id: Id): Promise<boolean> {
   if ((await db.cadernos.where("areaId").equals(id).count()) > 0) return false;
   await db.areas.delete(id);
+  await lembrarApagado(id, "area");
   return true;
 }
 
@@ -105,6 +111,7 @@ export async function removerSecao(caderno: Caderno, secaoId: Id) {
 export async function apagarCaderno(id: Id): Promise<boolean> {
   if ((await db.paginas.where("cadernoId").equals(id).count()) > 0) return false;
   await db.cadernos.delete(id);
+  await lembrarApagado(id, "caderno");
   return true;
 }
 
@@ -164,9 +171,12 @@ export async function restaurarDaLixeira(id: Id) {
 
 /** Apagar de verdade: a página e os anexos dela. Não tem volta. */
 export async function apagarParaSempre(id: Id) {
-  await db.transaction("rw", db.paginas, db.anexos, async () => {
-    await db.anexos.where("paginaId").equals(id).delete();
+  await db.transaction("rw", db.paginas, db.anexos, db.apagados, async () => {
+    const anexos = await db.anexos.where("paginaId").equals(id).primaryKeys();
+    await db.anexos.bulkDelete(anexos);
     await db.paginas.delete(id);
+    for (const a of anexos) await lembrarApagado(a, "anexo");
+    await lembrarApagado(id, "pagina");
   });
 }
 
@@ -181,6 +191,7 @@ export async function descartarSeVazia(id: Id): Promise<boolean> {
   if (!vazia) return false;
   if ((await db.anexos.where("paginaId").equals(id).count()) > 0) return false;
   await db.paginas.delete(id);
+  await lembrarApagado(id, "pagina");
   return true;
 }
 
@@ -206,6 +217,7 @@ export async function guardarAnexo(paginaId: Id, arquivo: Blob, nome: string): P
 export async function apagarAnexo(id: Id) {
   const anexo = await db.anexos.get(id);
   await db.anexos.delete(id);
+  await lembrarApagado(id, "anexo");
   if (anexo) await atualizarPagina(anexo.paginaId, {});
 }
 

@@ -135,3 +135,20 @@ export function nomesStatusCaderno(tipo: TipoCaderno): Record<StatusCaderno, str
   }
   return { quero: "Quero fazer", andamento: "Em andamento", concluido: "Concluído", pausado: "Pausado" };
 }
+
+/** Algo apagado para sempre — para o outro aparelho apagar também. */
+export interface Apagado {
+  id: Id;
+  tipo: "area" | "caderno" | "pagina" | "anexo";
+  em: string;
+}
+
+/** A ligação com o repositório privado de dados (fica só neste aparelho). */
+export interface Sincronia {
+  chave: "github";
+  /** "dona/repositorio" */
+  repo: string;
+  token: string;
+  ultimaEm: string | null;
+  ultimoErro: string | null;
+}
