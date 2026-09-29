@@ -6,6 +6,8 @@ import { gerarBackup, restaurarBackup } from "../dados/backupNoAparelho";
 import { baixarArquivo, tamanhoLegivel } from "../util/arquivos";
 import { dataCompleta, haQuanto } from "../util/datas";
 import { Icone } from "../componentes/Icone";
+import { SincroniaCartao } from "../componentes/SincroniaCartao";
+import { useSincronia } from "../app/Sincronia";
 
 export function Backup() {
   const dados = useDados();
@@ -17,6 +19,7 @@ export function Backup() {
   const [espaco, definirEspaco] = useState<{ usado: number; total: number } | null>(null);
   const entrada = useRef<HTMLInputElement>(null);
   const ultimo = dados.config.ultimoBackupEm;
+  const sincronia = useSincronia();
 
   useEffect(() => {
     void navigator.storage?.persisted?.().then(definirProtegido);
@@ -71,11 +74,22 @@ export function Backup() {
     <div className="tela">
       <h1 className="titulo-tela">Backup</h1>
 
+      <SincroniaCartao />
+
       <section className="cartao">
-        <h2>Onde suas anotações estão</h2>
+        <h2>Backup em arquivo</h2>
         <p>
-          Só <strong>neste aparelho</strong>, dentro do navegador. Nada vai para a internet. Por isso o backup é seu
-          seguro: se o aparelho quebrar ou o navegador for limpo, é ele que traz tudo de volta.
+          {sincronia.configurada ? (
+            <>
+              As anotações ficam neste aparelho <strong>e</strong> no seu repositório privado. O .zip é uma cópia a
+              mais, que você guarda onde quiser.
+            </>
+          ) : (
+            <>
+              Hoje as anotações estão só <strong>neste aparelho</strong>, dentro do navegador. O backup é seu seguro:
+              se o aparelho quebrar ou o navegador for limpo, é ele que traz tudo de volta.
+            </>
+          )}
         </p>
         <p className="dica">
           {ultimo ? (

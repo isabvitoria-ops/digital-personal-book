@@ -1718,3 +1718,18 @@ a.item:hover,
     color: #000;
   }
 }
+
+.estado-sincronia {
+  margin: 0 0 4px;
+  padding: 0 10px;
+  font-size: 12.5px;
+  color: var(--texto-3);
+}
+
+.estado-sincronia.com-erro {
+  color: var(--perigo);
+}
+
+.cartao form .botao {
+  margin-top: 4px;
+}

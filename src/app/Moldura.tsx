@@ -2,6 +2,8 @@ import { useEffect, type ReactNode } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { estaNaInbox, useDados } from "./Dados";
 import { useNovaAnotacao } from "./novaAnotacao";
+import { useSincronia } from "./Sincronia";
+import { haQuanto } from "../util/datas";
 import { Icone, type NomeIcone } from "../componentes/Icone";
 
 /**
@@ -17,6 +19,7 @@ export function Moldura({ children }: { children: ReactNode }) {
   const navegar = useNavigate();
   const local = useLocation();
   const naInbox = dados.vivas.filter((p) => estaNaInbox(p, dados)).length;
+  const sincronia = useSincronia();
 
   // Dentro de um caderno, o "+" cria a página ali mesmo.
   const cadernoAberto = local.pathname.match(/^\/caderno\/([a-z0-9]+)/)?.[1];
@@ -88,6 +91,17 @@ export function Moldura({ children }: { children: ReactNode }) {
             })}
         </nav>
         <nav className="lateral-grupo lateral-rodape">
+          {sincronia.configurada && (
+            <p className={`estado-sincronia ${sincronia.erro ? "com-erro" : ""}`}>
+              {sincronia.sincronizando
+                ? "Sincronizando…"
+                : sincronia.erro
+                  ? "Sincronização com erro"
+                  : sincronia.ultimaEm
+                    ? `Sincronizado ${haQuanto(sincronia.ultimaEm)}`
+                    : "Sincronização ligada"}
+            </p>
+          )}
           {atalho("/backup", "backup", "Backup")}
           {atalho("/mais", "menu", "Mais")}
         </nav>

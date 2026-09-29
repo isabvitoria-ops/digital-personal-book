@@ -39,8 +39,13 @@ calculadora de dieta, do Conversation in English nem de nenhum outro.
 | Site publicado | branch `gh-pages`, gerada pela Action "Publicar" |
 | Backup | .zip que ela baixa em Mais → Backup |
 
-A sincronização entre aparelhos (fase C2) vai usar um **segundo repositório,
-privado**, só de dados. Nunca este.
+A sincronização entre aparelhos usa um **segundo repositório, privado**, só de
+dados (sugerido: `isabvitoria-ops/caderno-dados`), que ela cria e liga pelo
+app (Backup → Sincronizar entre aparelhos). Nunca este. Você **não** mexe no
+repositório de dados — ele é das anotações dela.
+
+**O formato no repositório de dados é contrato** (`src/sincronia/formato.ts`):
+mudou? Suba `VERSAO` e trate a leitura da versão anterior.
 
 ## Publicar
 

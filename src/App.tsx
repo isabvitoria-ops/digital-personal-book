@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { HashRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { ProvedorDeDados } from "./app/Dados";
 import { ProvedorDeDialogos } from "./app/Dialogos";
+import { ProvedorDeSincronia } from "./app/Sincronia";
 import { Moldura } from "./app/Moldura";
 import { Inicio } from "./telas/Inicio";
 import { Buscar } from "./telas/Buscar";
@@ -21,6 +22,7 @@ export function App() {
   return (
     <HashRouter>
       <ProvedorDeDados>
+        <ProvedorDeSincronia>
         <ProvedorDeDialogos>
           <VoltarAoTopo />
           <Routes>
@@ -53,6 +55,7 @@ export function App() {
             />
           </Routes>
         </ProvedorDeDialogos>
+        </ProvedorDeSincronia>
       </ProvedorDeDados>
     </HashRouter>
   );

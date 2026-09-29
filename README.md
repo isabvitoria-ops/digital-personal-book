@@ -20,8 +20,9 @@ a anos.
 
 ## Onde ficam as anotações
 
-**Só no aparelho** (IndexedDB do navegador). Este repositório é público e tem
-**apenas o código** — nenhuma anotação passa por aqui.
+**No aparelho** (IndexedDB do navegador) e, se ela ligar a sincronização, num
+**segundo repositório, privado**, só de dados. Este repositório é público e
+tem **apenas o código** — nenhuma anotação passa por aqui.
 
 O backup é um .zip que se lê sem o app: cada página é um arquivo `.md` (texto
 comum) na pasta da sua organização, com os anexos ao lado. Restaurar **junta**

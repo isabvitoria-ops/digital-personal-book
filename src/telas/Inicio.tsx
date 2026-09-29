@@ -5,6 +5,7 @@ import { ListaDePaginas } from "../componentes/ListaDePaginas";
 import { Icone } from "../componentes/Icone";
 import { criarAreasSugeridas, AREAS_SUGERIDAS } from "../dados/operacoes";
 import { diasDesde, haQuanto, hoje } from "../util/datas";
+import { useSincronia } from "../app/Sincronia";
 
 /**
  * O Início é pequeno de propósito: voltar para o que estava fazendo, anotar
@@ -23,7 +24,10 @@ export function Inicio() {
     .sort((a, b) => a.revisarEm!.localeCompare(b.revisarEm!));
   const naInbox = dados.vivas.filter((p) => estaNaInbox(p, dados)).length;
   const ultimoBackup = dados.config.ultimoBackupEm;
-  const lembrarBackup = dados.vivas.length >= 3 && (!ultimoBackup || diasDesde(ultimoBackup) >= 30);
+  const sincronia = useSincronia();
+  const sincronizadoHaPouco = sincronia.configurada && sincronia.ultimaEm !== null && diasDesde(sincronia.ultimaEm) < 7;
+  const lembrarBackup =
+    !sincronizadoHaPouco && dados.vivas.length >= 3 && (!ultimoBackup || diasDesde(ultimoBackup) >= 30);
   const primeiraVez = dados.areas.length === 0 && dados.paginas.length === 0;
 
   return (
@@ -74,6 +78,12 @@ export function Inicio() {
           <h2 className="secao-titulo">Continue de onde parou</h2>
           <ListaDePaginas paginas={recentes} direita={(p) => <span className="data">{haQuanto(p.abertaEm!)}</span>} />
         </section>
+      )}
+
+      {sincronia.configurada && sincronia.erro && !sincronia.sincronizando && (
+        <Link to="/backup" className="lembrete">
+          <Icone nome="backup" tamanho={16} />A sincronização falhou. Toque para ver.
+        </Link>
       )}
 
       {lembrarBackup && (
