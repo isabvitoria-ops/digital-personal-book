@@ -16,6 +16,35 @@
   <body>
     <div id="raiz"></div>
     <noscript>O Meu Caderno precisa de JavaScript ligado.</noscript>
+    <script>
+      // Último recurso: se em 12 segundos nada apareceu (o programa nem chegou a
+      // carregar), mostra o que deu errado em vez de deixar a tela em branco.
+      (function () {
+        var erros = [];
+        window.addEventListener("error", function (e) { erros.push(String(e.message || "erro")); });
+        window.addEventListener("unhandledrejection", function (e) {
+          erros.push(String((e.reason && e.reason.message) || e.reason));
+        });
+        setTimeout(function () {
+          var r = document.getElementById("raiz");
+          if (!r || r.children.length) return;
+          var d = document.createElement("div");
+          d.style.cssText = "max-width:520px;margin:48px auto;padding:0 20px;font-family:system-ui,sans-serif";
+          var h = document.createElement("h1");
+          h.textContent = "O Caderno não conseguiu abrir";
+          var p = document.createElement("p");
+          p.textContent = "Tente recarregar a página. Se continuar assim, me mande um print desta tela.";
+          var t = document.createElement("p");
+          t.style.cssText = "font-size:13px;opacity:.7;overflow-wrap:anywhere";
+          t.textContent = "Detalhe técnico: " + (erros.join(" | ") || "nenhum erro registrado");
+          var b = document.createElement("button");
+          b.textContent = "Tentar de novo";
+          b.onclick = function () { location.reload(); };
+          d.appendChild(h); d.appendChild(p); d.appendChild(t); d.appendChild(b);
+          r.appendChild(d);
+        }, 12000);
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
