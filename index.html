@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#f7f4ee" />
+    <meta name="color-scheme" content="only light" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Caderno" />
+    <link rel="icon" href="/digital-personal-book/icone.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/digital-personal-book/icone-180.png" />
+    <title>Meu Caderno</title>
+    <script type="module" crossorigin src="/digital-personal-book/assets/index-DlRPmc3M.js"></script>
+    <link rel="stylesheet" crossorigin href="/digital-personal-book/assets/index-CbWtkZ4Q.css">
+  <link rel="manifest" href="/digital-personal-book/manifest.webmanifest"></head>
+  <body>
+    <div id="raiz"></div>
+    <noscript>O Meu Caderno precisa de JavaScript ligado.</noscript>
+    <script>
+      // Último recurso: se em 12 segundos nada apareceu (o programa nem chegou a
+      // carregar), mostra o que deu errado em vez de deixar a tela em branco.
+      (function () {
+        var erros = [];
+        window.addEventListener("error", function (e) { erros.push(String(e.message || "erro")); });
+        window.addEventListener("unhandledrejection", function (e) {
+          erros.push(String((e.reason && e.reason.message) || e.reason));
+        });
+        setTimeout(function () {
+          var r = document.getElementById("raiz");
+          if (!r || r.children.length) return;
+          var d = document.createElement("div");
+          d.style.cssText = "max-width:520px;margin:48px auto;padding:0 20px;font-family:system-ui,sans-serif";
+          var h = document.createElement("h1");
+          h.textContent = "O Caderno não conseguiu abrir";
+          var p = document.createElement("p");
+          p.textContent = "Tente recarregar a página. Se continuar assim, me mande um print desta tela.";
+          var t = document.createElement("p");
+          t.style.cssText = "font-size:13px;opacity:.7;overflow-wrap:anywhere";
+          t.textContent = "Detalhe técnico: " + (erros.join(" | ") || "nenhum erro registrado");
+          var b = document.createElement("button");
+          b.textContent = "Tentar de novo";
+          b.onclick = function () { location.reload(); };
+          d.appendChild(h); d.appendChild(p); d.appendChild(t); d.appendChild(b);
+          r.appendChild(d);
+        }, 12000);
+      })();
+    </script>
+  </body>
+</html>
