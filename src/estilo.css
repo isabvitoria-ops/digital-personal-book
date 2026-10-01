@@ -35,27 +35,11 @@
   color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --fundo: #1b1a18;
-    --superficie: #242320;
-    --superficie-2: #2d2b28;
-    --texto: #ebe6dc;
-    --texto-2: #a9a397;
-    --texto-3: #7d776c;
-    --linha: #3a3833;
-    --acento: #8fb8a2;
-    --acento-texto: #14201a;
-    --acento-suave: #2b3832;
-    --link: #9cc7b0;
-    --marca-busca: #6a5a1f;
-    --perigo: #e58a74;
-    --alerta-fundo: #3a2a22;
-    --ok-fundo: #23332a;
-    --sombra: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
-    color-scheme: dark;
-  }
-}
+/*
+ * SEM TEMA ESCURO, de propósito. O app já seguiu o tema do aparelho, e quem
+ * usa o celular ou o computador no escuro via o caderno inteiro escuro sem ter
+ * pedido. Aqui o papel é sempre claro.
+ */
 
 * {
   box-sizing: border-box;
